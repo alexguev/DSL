@@ -49,8 +49,8 @@
 
 - (DslCons*) initWithHead:(DslExpression*)h andTail:(DslExpression*)t
 {
-  head = [h retain];
-  tail = [t retain];
+  self.head = h;
+  self.tail = t;
   return self;
 }
 
@@ -69,13 +69,13 @@
 
 - (void) setHead:(DslExpression*)h
 {
-  head = [h retain];
+  head = h;
 }
 
 
 - (void) setTail:(DslExpression*)t
 {
-  tail = [t retain];
+  tail = t;
 }
 
 

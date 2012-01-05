@@ -53,11 +53,11 @@
 }
 
 
-- (void) testGetsAListOfOneIdentifier
+- (void) testGetsAListOfOneSymbol
 {
   DslExpression *e = [p parseCons:[InputStream withString:@"a)"]];
   STAssertNotNil([e head], nil);
-  STAssertTrue([e.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.head identifierValue], @"a", nil);
   STAssertNil(e.tail, nil);
 }
@@ -67,7 +67,7 @@
 {
   DslExpression *e = [p parseCons:[InputStream withString:@"a 2)"]];
   STAssertNotNil(e.head, nil);
-  STAssertTrue([e.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.head identifierValue], @"a", nil);
   STAssertNotNil(e.tail, nil);
   STAssertNotNil(e.tail.head, nil);
@@ -80,7 +80,7 @@
 {
   DslExpression *e = [p parseCons:[InputStream withString:@"a 2 b 3 \"hello\")"]];
   STAssertNotNil(e.head, nil);
-  STAssertTrue([e.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.head identifierValue], @"a", nil);
   
   STAssertNotNil(e.tail, nil);
@@ -90,7 +90,7 @@
   
   STAssertNotNil(e.tail.tail, nil);
   STAssertNotNil(e.tail.tail.head, nil);
-  STAssertTrue([e.tail.tail.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.tail.tail.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.tail.tail.head identifierValue], @"b", nil);
   
   STAssertNotNil(e.tail.tail.tail, nil);
@@ -109,7 +109,7 @@
 {
   DslExpression *e = [p parseCons:[InputStream withString:@"a (2) b)"]];
   STAssertNotNil(e.head, nil);
-  STAssertTrue([e.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.head identifierValue], @"a", nil);
   
   STAssertNotNil(e.tail, nil);
@@ -118,7 +118,7 @@
 
   STAssertNotNil(e.tail.tail, nil);
   STAssertNotNil(e.tail.tail.head, nil);
-  STAssertTrue([e.tail.tail.head isMemberOfClass:[DslIdentifier class]], @"expected a DslIdentifier");
+  STAssertTrue([e.tail.tail.head isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
   STAssertEqualObjects([e.tail.tail.head identifierValue], @"b", nil);  
 }
 

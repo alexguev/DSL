@@ -39,10 +39,10 @@
 }
 
 
-- (void) testIdentifier
+- (void) testSymbol
 {
   DslExpression *e = [p parseAtomicExpression:[InputStream withString:@"test"]];
-  STAssertTrue([e isMemberOfClass:[DslIdentifier class]], @"expected a Dsldentifier");
+  STAssertTrue([e isMemberOfClass:[DslSymbol class]], @"expected a DslSymbol");
 }
 
 @end

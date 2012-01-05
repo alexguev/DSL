@@ -29,10 +29,8 @@
 
 - (void) testMethodCallInLisp
 {
-  DslObject *obj = [DslObject withObject:[NSNumber numberWithInt:5]];
-  DslCons *bindings = [DslCons withHead:[DslCons withHead:[DslSymbol withName:@"obj"] 
-                                                  andTail:[DslObject withObject:[NSNumber numberWithInt:5]]]];
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(get-integer obj 'intValue)"]] eval:bindings];
+  [DSL bind:[DslSymbol withName:@"obj"] to:[DslObject withObject:[NSNumber numberWithInt:5]]];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(get-integer obj 'intValue)"]] eval];
 
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 5, nil);
@@ -41,13 +39,9 @@
 
 - (void) testMethodCallInSelect
 {
-  DslObject *obj = [DslObject withObject:[NSNumber numberWithInt:5]];
-  DslCons *bindings = [DslCons withHead:[DslCons withHead:[DslSymbol withName:@"obj1"] 
-                                                  andTail:[DslObject withObject:[NSNumber numberWithInt:5]]]
-                                andTail:[DslCons withHead:[DslCons withHead:[DslSymbol withName:@"obj2"] 
-                                                                    andTail:[DslObject withObject:[NSNumber numberWithInt:2]]]]];
-  
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(select (lambda (obj) (< (get-integer obj 'intValue) 3)) (list obj1 obj2) )"]] eval:bindings];
+  [DSL bind:[DslSymbol withName:@"obj1"] to:[DslObject withObject:[NSNumber numberWithInt:5]]];
+  [DSL bind:[DslSymbol withName:@"obj2"] to:[DslObject withObject:[NSNumber numberWithInt:2]]];
+  DslCons *result = (DslCons*)[[p parseExpression:[InputStream withString:@"(select (lambda (obj) (< (get-integer obj 'intValue) 3)) (list obj1 obj2) )"]] eval];
   STAssertTrue([result isKindOfClass:[DslCons class]], nil);
   STAssertEquals([[result length] intValue], 1, nil);
 }

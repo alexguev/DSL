@@ -26,8 +26,8 @@
 
 - (DslDefinedFunction*) initWithParameters:(DslCons*)p andBody:(DslCons*)b
 {
-  parameters = [p retain];
-  body = [b retain];
+  parameters = p;
+  body = b;
   return self;
 }
 

@@ -38,7 +38,7 @@
 
 - (NSString*) toString
 {
-  return value;
+  return [NSString stringWithFormat:@"\"%@\"", value];
 }
 
 

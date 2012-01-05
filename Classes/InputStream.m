@@ -16,10 +16,9 @@
 {
   NSFileHandle *readHandle = [NSFileHandle fileHandleForReadingAtPath:filename];
   if (readHandle) {
-    NSString *stuff = [[[NSString alloc] initWithData: [readHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding] retain];
+    NSString *stuff = [[NSString alloc] initWithData: [readHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding];
     [readHandle closeFile];
     InputStream *ins = [[InputStream alloc] initWithString:stuff];
-    [stuff release];
     [readHandle closeFile];
     return ins;
   } else {
@@ -36,7 +35,7 @@
 
 - (InputStream*) initWithString:(NSString*)str
 {
-  contents = [str retain];
+  contents = str;
   position = 0;
   bookmark = 0;
   return self;

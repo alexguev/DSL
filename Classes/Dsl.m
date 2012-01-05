@@ -20,8 +20,8 @@ DslNil *NIL_CONS = nil;
 + (void) initialize
 {
   if (DSL == nil) {
-    NIL_CONS = [[DslNil alloc] retain];
-    DSL = [[[Dsl alloc] init] retain];
+    NIL_CONS = [DslNil alloc];
+    DSL = [[Dsl alloc] init];
   }
 }
 
@@ -55,6 +55,7 @@ DslNil *NIL_CONS = nil;
   [self bindName:@"ninth"       toTarget:self andSelector:@selector(ninth:)];
   [self bindName:@"tenth"       toTarget:self andSelector:@selector(tenth:)];
   [self bindName:@"nth"         toTarget:self andSelector:@selector(nth:)];
+  [self bindName:@"last"        toTarget:self andSelector:@selector(last:)];
   [self bindName:@"car"         toTarget:self andSelector:@selector(car:)];
   [self bindName:@"cdr"         toTarget:self andSelector:@selector(cdr:)];
   [self bindName:@"caar"        toTarget:self andSelector:@selector(caar:)];
@@ -65,10 +66,12 @@ DslNil *NIL_CONS = nil;
   [self bindName:@"caadr"       toTarget:self andSelector:@selector(caadr:)];
   [self bindName:@"cadar"       toTarget:self andSelector:@selector(cadar:)];
   [self bindName:@"caddr"       toTarget:self andSelector:@selector(caddr:)];
+  [self bindName:@"cadddr"      toTarget:self andSelector:@selector(cadddr:)];
   [self bindName:@"cdaar"       toTarget:self andSelector:@selector(cdaar:)];
   [self bindName:@"cdadr"       toTarget:self andSelector:@selector(cdadr:)];
   [self bindName:@"cddar"       toTarget:self andSelector:@selector(cddar:)];
   [self bindName:@"cdddr"       toTarget:self andSelector:@selector(cdddr:)];
+  [self bindName:@"cddddr"      toTarget:self andSelector:@selector(cddddr:)];
   [self bindName:@"length"      toTarget:self andSelector:@selector(length:)];
   [self bindName:@"map"         toTarget:self andSelector:@selector(collect:)];
   [self bindName:@"collect"     toTarget:self andSelector:@selector(collect:)];
@@ -76,6 +79,7 @@ DslNil *NIL_CONS = nil;
   [self bindName:@"filter"      toTarget:self andSelector:@selector(select:)];
   [self bindName:@"reduce"      toTarget:self andSelector:@selector(inject:)];
   [self bindName:@"inject"      toTarget:self andSelector:@selector(inject:)];
+  [self bindName:@"except"      toTarget:self andSelector:@selector(except:)];
   [self bindName:@"any?"        toTarget:self andSelector:@selector(any:)];
   [self bindName:@"detect"      toTarget:self andSelector:@selector(any:)];
   [self bindName:@"all?"        toTarget:self andSelector:@selector(all:)];
@@ -93,6 +97,7 @@ DslNil *NIL_CONS = nil;
   [self bindName:@"="           toTarget:self andSelector:@selector(equalTo:)];
   [self bindName:@">"           toTarget:self andSelector:@selector(greaterThan:)];
   [self bindName:@"str-eq"      toTarget:self andSelector:@selector(stringEqual:)];
+  [self bindName:@"eq"          toTarget:self andSelector:@selector(eq:)];
   [self bindName:@"get-string"  toTarget:self andSelector:@selector(getString:)];
   [self bindName:@"get-integer" toTarget:self andSelector:@selector(getInteger:)];
   [self bindName:@"get-boolean" toTarget:self andSelector:@selector(getBoolean:)];
@@ -314,6 +319,16 @@ DslNil *NIL_CONS = nil;
 }
 
 
+- (DslExpression*) last:(DslCons*)args
+{
+  DslCons *list = (DslCons*)[args.head eval];
+  while ([list.tail notNil]) {
+    list = (DslCons*)list.tail;
+  }
+  return list.head;
+}
+
+
 - (DslExpression*) first:(DslCons*)args
 {
   return [self getNth:1 from:(DslCons*)[args.head eval]];
@@ -435,6 +450,11 @@ DslNil *NIL_CONS = nil;
   return [args.head eval].tail.tail.head;
 }
 
+- (DslExpression*) cadddr:(DslCons*)args
+{
+  return [args.head eval].tail.tail.tail.head;
+}
+
 
 - (DslExpression*) cdaar:(DslCons*)args
 {
@@ -457,6 +477,12 @@ DslNil *NIL_CONS = nil;
 - (DslExpression*) cdddr:(DslCons*)args
 {
   return [args.head eval].tail.tail.tail;
+}
+
+
+- (DslExpression*) cddddr:(DslCons*)args
+{
+  return [args.head eval].tail.tail.tail.tail;
 }
 
 
@@ -779,6 +805,18 @@ DslNil *NIL_CONS = nil;
 }
 
 
+- (DslBoolean*) eq:(DslCons*)args
+{
+  if (args == nil) return [DslBoolean withFalse];
+  if ([self internalLength:args] != 2) return [DslBoolean withFalse];
+  
+  DslExpression *lval = [args.head eval];
+  DslExpression *rval = [args.tail.head eval];
+  
+  return [DslBoolean booleanWith:[lval compareTo: rval]];
+}
+
+
 - (DslString*) getString:(DslCons*)args
 {
   DslObject *obj = (DslObject*)[args.head eval];
@@ -803,28 +841,31 @@ DslNil *NIL_CONS = nil;
 }
 
 
-- (DslString*) setString:(DslCons*)args
-{
-  DslObject *obj = (DslObject*)[args.head eval];
-  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
-  return [obj setString:[sel identifierValue]];
-}
-
-
-- (DslNumber*) setInteger:(DslCons*)args
-{
-  DslObject *obj = (DslObject*)[args.head eval];
-  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
-  return [obj setInteger:[sel identifierValue]];
-}
-
-
-- (DslBoolean*) setBoolean:(DslCons*)args
-{
-  DslObject *obj = (DslObject*)[args.head eval];
-  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
-  return [obj setBoolean:[sel identifierValue]];
-}
+//- (DslString*) setString:(DslCons*)args
+//{
+//  DslObject *obj = (DslObject*)[args.head eval];
+//  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
+//  DslString *value = (DslString*)[args.tail.tail.head eval];
+//  return [obj setString:[sel identifierValue] to:value];
+//}
+//
+//
+//- (DslNumber*) setInteger:(DslCons*)args
+//{
+//  DslObject *obj = (DslObject*)[args.head eval];
+//  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
+//  DslNumber *value = (DslNumber*)[args.tail.tail.head eval];
+//  return [obj setInteger:[sel identifierValue] to:value];
+//}
+//
+//
+//- (DslBoolean*) setBoolean:(DslCons*)args
+//{
+//  DslObject *obj = (DslObject*)[args.head eval];
+//  DslSymbol *sel = (DslSymbol*)[args.tail.head eval];
+//  DslBoolean *value = (DslBoolean*)[args.tail.tail.head eval];
+//  return [obj setBoolean:[sel identifierValue] to:value];
+//}
 
 
 - (DslCons*) acons:(DslCons*)args
@@ -856,10 +897,8 @@ DslNil *NIL_CONS = nil;
 }
 
 
-- (DslCons*) assoc:(DslCons*)args
+- (DslCons *)internalAssoc:(DslSymbol*)key in:(DslCons*)list
 {
-  DslExpression *key = [args.head eval];
-  DslCons *list = (DslCons*)[args.tail.head eval];
   while ([list notNil]) {
     if ([list.head.head compareTo:key]) {
       return (DslCons*)list.head;
@@ -867,6 +906,14 @@ DslNil *NIL_CONS = nil;
     list = (DslCons*)list.tail;
   }
   return NIL_CONS;
+}
+
+
+- (DslCons*) assoc:(DslCons*)args
+{
+  DslExpression *key = [args.head eval];
+  DslCons *list = (DslCons*)[args.tail.head eval];
+  return [self internalAssoc:key in:list];
 }
 
 
@@ -895,11 +942,17 @@ DslNil *NIL_CONS = nil;
 }
 
 
+- (DslExpression*) loadFileFromPathname:(NSString*)pathname
+{
+  InputStream *input = [InputStream withFile:pathname];
+  return [self loadString:input];
+}
+
+
 - (DslExpression*) loadFile:(NSString*)filebasename
 {
-  NSString *pathName = [[NSBundle mainBundle] pathForResource:filebasename ofType:@"lsp" inDirectory:nil];
-  InputStream *input = [InputStream withFile:pathName];
-  return [self loadString:input];
+  NSString *pathname = [[NSBundle mainBundle] pathForResource:filebasename ofType:@"lsp" inDirectory:nil];
+  return [self loadFileFromPathname:pathname];
 }
 
 

@@ -16,7 +16,7 @@
   DslExpression *value;
 }
 
-@property (assign, nonatomic) DslSymbol *symbol;
-@property (assign, nonatomic) DslExpression *value;
+@property (retain, nonatomic) DslSymbol *symbol;
+@property (retain, nonatomic) DslExpression *value;
 
 @end

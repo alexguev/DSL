@@ -28,8 +28,8 @@
   InputStream *expectedStream = [InputStream withString:result];
   DslExpression *actual = [[p parseExpression:codeStream] eval];
   DslExpression *expected = [[p parseExpression:expectedStream] eval];
-  [codeStream release];
-  [expectedStream release];
+  codeStream;
+  expectedStream;
 
   BOOL areEqual = [actual compareTo:expected];
   if (areEqual) {
@@ -73,7 +73,7 @@
     NSString *testString = [[NSString alloc] initWithData: [readHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding];
     [reporter startFile:[self testNameFromPath:path]];
     [self process:testString];
-    [testString release];
+    testString;
     [readHandle closeFile];
   }
 }

@@ -74,6 +74,12 @@ caddr
 
 3
 ----
+cadddr
+
+(cadddr '(1 2 3 4 5))
+
+4
+----
 cdar
 
 (cdar '((1 a b) 2 3 4 5))
@@ -115,6 +121,12 @@ cdddr
 (cdddr '(1 2 3 4 5))
 
 '(4 5)
+----
+cddddr
+
+(cddddr '(1 2 3 4 5))
+
+'(5)
 ----
 cdadr
 

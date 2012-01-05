@@ -19,7 +19,7 @@
 
 - (void) testLessThanTrue
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(< 1 2)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(< 1 2)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertTrue([result booleanValue], nil);
@@ -28,7 +28,7 @@
 
 - (void) testLessThanFalse
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(< 2 1)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(< 2 1)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertFalse([result booleanValue], nil);
@@ -37,7 +37,7 @@
 
 - (void) testGreaterThanTrue
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(> 2 1)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(> 2 1)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertTrue([result booleanValue], nil);
@@ -46,7 +46,7 @@
 
 - (void) testGreaterThanFalse
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(> 1 2)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(> 1 2)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertFalse([result booleanValue], nil);
@@ -55,7 +55,7 @@
 
 - (void) testEqualToTrue
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(= 1 1)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(= 1 1)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertTrue([result booleanValue], nil);
@@ -64,7 +64,7 @@
 
 - (void) testEqualToFalse
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(= 1 2)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(= 1 2)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isMemberOfClass:[DslBoolean class]], nil);
   STAssertFalse([result booleanValue], nil);

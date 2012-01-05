@@ -42,6 +42,7 @@ extern DslNil *NIL_CONS;
 - (DslCons*) arrayToBoxedList:(NSArray*)anArray;
 - (DslCons*) makeList:(DslExpression*)first, ...;
 - (DslSymbol*) internalIntern:(NSString *)name;
+- (DslCons *)internalAssoc:(DslSymbol*)key in:(DslCons*)list;
 - (DslExpression*) bind:(DslSymbol*)symbol to:(DslExpression*)value;
 - (DslExpression*) valueOf:(DslSymbol*)symbol;
 - (void) pushLocalBindings;
@@ -49,6 +50,7 @@ extern DslNil *NIL_CONS;
 
 - (DslExpression*) apply:(DslFunction*)func to:(DslCons*)args;
 - (DslExpression*) eval:(DslExpression*)sexp;
+- (DslExpression*) evalEach:(DslCons*)list;
 - (DslExpression*) doList:(DslCons*)args;
 
 
@@ -77,6 +79,8 @@ extern DslNil *NIL_CONS;
 - (DslExpression*) caadr:(DslCons*)args;
 - (DslExpression*) cadar:(DslCons*)args;
 - (DslExpression*) caddr:(DslCons*)args;
+- (DslExpression*) cadddr:(DslCons*)args;
+
 - (DslExpression*) cdaar:(DslCons*)args;
 - (DslExpression*) cdadr:(DslCons*)args;
 - (DslExpression*) cddar:(DslCons*)args;
@@ -108,6 +112,7 @@ extern DslNil *NIL_CONS;
 - (DslNumber*) getInteger:(DslCons*)args;
 - (DslBoolean*) getBoolean:(DslCons*)args;
   
+- (DslExpression*) loadFileFromPathname:(NSString*)pathname;
 - (DslExpression*) loadFile:(NSString*)filebasename;
 - (DslExpression*) exec:(NSString*)code;
 @end

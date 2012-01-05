@@ -19,22 +19,22 @@
 
 - (void) testParsingEmptyLambda
 {
-  DslExpression *func = [[p parseExpression:[InputStream withString:@"(lambda ())"]] eval:nil];
+  DslExpression *func = [[p parseExpression:[InputStream withString:@"(lambda ())"]] eval];
   STAssertTrue([func isKindOfClass:[DslFunction class]], nil);
 }
 
 
 - (void) testEvalingEmptyLambda
 {
-  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda ())"]] eval:nil];
-  STAssertNil([func evalWithArguments:[[DslCons alloc] init] andBindings:[[DslCons alloc] init]], nil);
+  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda ())"]] eval];
+  STAssertNil([func evalWithArguments:[[DslCons alloc] init]], nil);
 }
 
 
 - (void) testEvalingSimpleLambda
 {
-  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda () 42)"]] eval:nil];
-  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init] andBindings:[[DslCons alloc] init]];
+  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda () 42)"]] eval];
+  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init]];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);
@@ -44,8 +44,8 @@
 
 - (void) testEvalingMoreInvolvedLambda
 {
-  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda () (+ 40 2))"]] eval:nil];
-  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init] andBindings:[[DslCons alloc] init]];
+  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda () (+ 40 2))"]] eval];
+  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init]];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);
@@ -54,8 +54,9 @@
 
 - (void) testEvalingLambdaWith1Argument
 {
-  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda (x) (+ x 2))"]] eval:nil];
-  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init] andBindings:(DslCons*)[p parseExpression:[InputStream withString:@"((x . 40))"]]];
+  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda (x) (+ x 2))"]] eval];
+  [DSL bind:[DslSymbol withName:@"x"] to:[DslNumber numberWith:40]];
+  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init]];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);
@@ -64,8 +65,10 @@
 
 - (void) testEvalingLambdaWithArguments
 {
-  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda (x y) (+ x y))"]] eval:nil];
-  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init] andBindings:(DslCons*)[p parseExpression:[InputStream withString:@"((x . 40) (y . 2))"]]];
+  DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda (x y) (+ x y))"]] eval];
+  [DSL bind:[DslSymbol withName:@"x"] to:[DslNumber numberWith:40]];
+  [DSL bind:[DslSymbol withName:@"y"] to:[DslNumber numberWith:2]];
+  DslExpression *result = [func evalWithArguments:[[DslCons alloc] init]];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);
@@ -74,7 +77,7 @@
 
 - (void) testApplyingSingleArgumentLambda
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(apply (lambda (x) (+ x 2)) 40)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(apply (lambda (x) (+ x 2)) 40)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);
@@ -83,7 +86,7 @@
 
 - (void) testApplyingMultipleArgumentLambda
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(apply (lambda (x y) (+ x y)) 40 2)"]] eval:nil];
+  DslExpression *result = [[p parseExpression:[InputStream withString:@"(apply (lambda (x y) (+ x y)) 40 2)"]] eval];
   STAssertNotNil(result, nil);
   STAssertTrue([result isKindOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 42, nil);

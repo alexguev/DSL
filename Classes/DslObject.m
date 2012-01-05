@@ -51,28 +51,28 @@
 }
 
 
-- (DslNumber*) setInteger:(NSString*)property to:(DslNumber*)value
-{
-  NSString *selector = [NSString stringWithFormat:@"%@:", property];
-  int intVal = (int)[obj performSelector:sel_getUid([selector UTF8String]) withObject:[value intValue]];
-  return value;
-}
-
-
-- (DslString*) setString:(NSString*)property to:(DslString*)value
-{
-  NSString *selector = [NSString stringWithFormat:@"%@:", property];
-  NSString *strVal = (NSString*)[obj performSelector:sel_getUid([selector UTF8String]) withObject:[value stringValue]];
-  return value;
-}
-
-
-- (DslBoolean*) setBoolean:(NSString*)property to:(DslBoolean*)value
-{
-  NSString *selector = [NSString stringWithFormat:@"%@:", property];
-  BOOL boolVal = (BOOL)[obj performSelector:sel_getUid([selector UTF8String]) withObject:[value booleanValue]];
-  return value;
-}
+//- (DslNumber*) setInteger:(NSString*)property to:(DslNumber*)value
+//{
+//  NSString *selector = [NSString stringWithFormat:@"%@:", property];
+//  int intVal = (int)[obj performSelector:sel_getUid([selector UTF8String]) withObject:(id)[value intValue]];
+//  return value;
+//}
+//
+//
+//- (DslString*) setString:(NSString*)property to:(DslString*)value
+//{
+//  NSString *selector = [NSString stringWithFormat:@"%@:", property];
+//  NSString *strVal = (NSString*)[obj performSelector:sel_getUid([selector UTF8String]) withObject:[value stringValue]];
+//  return value;
+//}
+//
+//
+//- (DslBoolean*) setBoolean:(NSString*)property to:(DslBoolean*)value
+//{
+//  NSString *selector = [NSString stringWithFormat:@"%@:", property];
+//  BOOL boolVal = (BOOL)[obj performSelector:sel_getUid([selector UTF8String]) withObject:[value booleanValue]];
+//  return value;
+//}
 
 
 - (NSString*) toString
@@ -83,7 +83,7 @@
 
 - (BOOL) compareTo:(DslExpression*)other
 {
-  return [super compareTo:other] && (obj == [other objectValue]);
+  return [super compareTo:other] && (obj == [(DslObject*)other objectValue]);
 }
 
 
