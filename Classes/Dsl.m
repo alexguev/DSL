@@ -127,6 +127,7 @@ DslNil *NIL_CONS = nil;
   return [symbolTable intern:name];
 }
 
+// Assumes anArray contains DslExpressions and puts them directly into a list.
 
 - (DslCons*) arrayToList:(NSArray*)anArray
 {
@@ -142,6 +143,7 @@ DslNil *NIL_CONS = nil;
   return list;
 }
 
+// Assumes anArray is an array of non-DSL objects and wraps them in DslObjects before putting them into a list.
 
 - (DslCons*) arrayToBoxedList:(NSArray*)anArray
 {

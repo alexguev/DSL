@@ -22,7 +22,6 @@
 - (DslExpression*)tail;
 - (DslExpression*) length;
 - (DslExpression*) eval;
-- (DslExpression*) evalEach:(DslCons*)bindings;
 
 - (NSString*) toString;
 - (NSString*) toStringHelper;

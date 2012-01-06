@@ -19,4 +19,6 @@
 @property (retain, nonatomic) DslSymbol *symbol;
 @property (retain, nonatomic) DslExpression *value;
 
++ (Binding*)withSymbol:(DslSymbol*)sym andValue:(DslExpression*)val;
+
 @end

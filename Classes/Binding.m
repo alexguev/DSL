@@ -14,4 +14,12 @@
 @synthesize symbol;
 @synthesize value;
 
++ (Binding*)withSymbol:(DslSymbol*)sym andValue:(DslExpression*)val
+{
+  Binding *newBinding = [Binding alloc];
+  newBinding.symbol = sym;
+  newBinding.value = val;
+  return newBinding;
+}
+
 @end

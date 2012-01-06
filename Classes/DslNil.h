@@ -15,6 +15,4 @@
 
 }
 
-+ (void) initialize;
-
 @end

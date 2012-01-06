@@ -77,9 +77,7 @@
 {
   Binding *found = [self findBindingInLocalFrameFor:symbol];
   if (found == nil) {
-    Binding *binding = [Binding alloc];
-    binding.symbol = symbol;
-    binding.value = value;
+    Binding *binding = [Binding withSymbol:symbol andValue:value];
     [[self localFrame] setObject:binding forKey:symbol.name];
   } else {
     found.value = value;
@@ -91,12 +89,8 @@
 - (DslExpression*) valueOf:(DslSymbol*)symbol
 {
   Binding *found = [self findBindingFor:symbol];
-  if (found == nil) {
-    return NIL_CONS;
-  } else {
-    return found.value;
-  }
-
+  if (found == nil) return NIL_CONS;
+  return found.value;
 }
 
 

@@ -27,7 +27,7 @@
 - (void) testEvalingEmptyLambda
 {
   DslFunction *func = (DslFunction*)[[p parseExpression:[InputStream withString:@"(lambda ())"]] eval];
-  STAssertNil([func evalWithArguments:[[DslCons alloc] init]], nil);
+  STAssertEqualObjects(NIL_CONS, [func evalWithArguments:[[DslCons alloc] init]], nil);
 }
 
 

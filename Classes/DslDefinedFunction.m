@@ -34,6 +34,8 @@
 
 - (DslExpression*) evalWithArguments:(DslCons*)args
 {
+  if (body == nil || [body isNil]) return NIL_CONS;
+
   [DSL pushLocalBindings];
   
   DslCons *p = parameters;
@@ -44,14 +46,9 @@
     a = (DslCons*)a.tail;
   }
   
-  if (body == nil || [body isNil]) {
-    [DSL popLocalBindings];
-    return NIL_CONS;
-  } else {
-    DslExpression *result = [DSL evalEach:body];
-    [DSL popLocalBindings];
-    return result;
-  }
+  DslExpression *result = [DSL evalEach:body];
+  [DSL popLocalBindings];
+  return result;
 }
 
 

@@ -20,24 +20,15 @@
   DslExpression *tail;
 }
 
-@property (assign, nonatomic) DslExpression *head;
-@property (assign, nonatomic) DslExpression *tail;
+@property (strong, nonatomic) DslExpression *head;
+@property (strong, nonatomic) DslExpression *tail;
 
-+ (DslCons*) quote:(DslExpression*)sexpr;
 + (DslCons*) empty;
 + (DslCons*) withHead:(DslExpression*)h;
 + (DslCons*) withHead:(DslExpression*)h andTail:(DslExpression*)t;
 
 - (DslCons*) init;
 - (DslCons*) initWithHead:(DslExpression*)h andTail:(DslExpression*)t;
-
-- (void) setHead:(DslExpression*)h;
-- (void) setTail:(DslExpression*)t;
-
-- (DslCons*) append:(DslExpression*)cell;
-- (DslCons*) copyList;
-- (DslCons*) last;
-- (DslExpression*) find:(DslSymbol*)variableName;
 
 - (DslCons*) copy;
 

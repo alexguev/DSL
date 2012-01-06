@@ -64,13 +64,6 @@ int indentLevel = 0;
 }
 
 
-- (DslExpression*) evalEach:(DslCons*)bindings
-{
-  return self;
-}
-
-
-
 - (NSString*) indentString
 {
   NSString *result = @"";
@@ -108,9 +101,14 @@ int indentLevel = 0;
 
 - (NSString*) toStringHelper
 {
-  return [self toString];
+  return @"";
 }
 
+
+- (NSString*)toString
+{
+  return @"";
+}
 
 - (BOOL) isNil
 {

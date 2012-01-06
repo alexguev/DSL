@@ -17,6 +17,7 @@
 
 @implementation DslCons
 
+@synthesize head, tail;
 
 + (DslCons*) empty
 {
@@ -35,11 +36,6 @@
   return [[DslCons alloc] initWithHead:h andTail:t];
 }
 
-+ (DslCons*) quote:(DslExpression*)expr
-{
-  return [DslCons withHead:[DslSymbol withName:@"quote"] andTail:[DslCons withHead:expr]];
-}
-
 
 - (DslCons*) init
 {
@@ -55,30 +51,6 @@
 }
 
 
-- (DslExpression*)head
-{
-  return head;
-}
-
-
-- (DslExpression*)tail
-{
-  return tail;
-}
-
-
-- (void) setHead:(DslExpression*)h
-{
-  head = h;
-}
-
-
-- (void) setTail:(DslExpression*)t
-{
-  tail = t;
-}
-
-
 - (BOOL) booleanValue
 {
   return YES;
@@ -89,11 +61,17 @@
 {
   DslCons *newNode = [DslCons withHead:head];
 
-  if (tail) {
-    return [newNode append:[tail copy]];
-  } else {
-    return newNode;
-  }
+  if (tail) newNode.tail = [tail copy];
+
+  return newNode;
+}
+
+
+- (NSString*) toStringHelper
+{
+  if (tail && [tail notNil]) return [NSString stringWithFormat:@"%@ %@", [head toString], [(DslCons*)tail toStringHelper]];;
+  if (head && [head notNil]) return [head toString];
+  return @"";
 }
 
 
@@ -102,20 +80,7 @@
   return [NSString stringWithFormat:@"(%@)", [self toStringHelper]];
 }
 
-- (NSString*) toStringHelper
-{
-  if (tail && [tail notNil]) {
-    return [NSString stringWithFormat:@"%@ %@", [head toString], [(DslCons*)tail toStringHelper]];;
-  } else if (head && [head notNil]) {
-    return [head toString];
-  } else {
-    return @"";
-  }
-
-}
-
-
-- (DslCons*) evalEach:(DslCons*)args
+- (DslCons*) evalEachArg:(DslCons*)args
 {
   DslCons *result = [DslCons empty];
   DslCons *lastResult = result;
@@ -124,25 +89,21 @@
     lastResult = (DslCons*)lastResult.tail;
     args = (DslCons*)args.tail;
   }
-  return result.tail;
+  return (DslCons*)result.tail;
 }
 
 
 - (DslExpression*) eval
 {
   NSString *funcName = [head stringValue];
-  DslSymbol *funcSymbol = [DSL internalIntern:funcName];
-  DslFunction *func = (DslFunction*)[DSL valueOf:funcSymbol];
+  DslFunction *func = (DslFunction*)[DSL valueOf:[DSL internalIntern:funcName]];
+
   if ([func isNil]) {
     NSLog(@"Unknown function: %@", funcName);
     return NIL_CONS;
   }
-  DslCons *args;
-  if ([func preEvalArgs])
-    args = [self evalEach:tail];
-  else 
-    args = tail;
   
+  DslCons *args = [func preEvalArgs] ? [self evalEachArg:tail] : (DslCons*)tail;
   return [func evalWithArguments:(args)];
 }
 
@@ -150,17 +111,11 @@
 - (BOOL) compareTo:(DslExpression*)other
 {
   if (![super compareTo:other]) return NO;
-  
   if (([head isNil] && [other.head notNil]) || ([head notNil] && [other.head isNil])) return NO;
-  
   if (![head compareTo:other.head]) return NO;
-  
   if ([tail isNil] && [other.tail isNil]) return YES;
-  
   if (([tail isNil] && [other.tail notNil]) || ([tail notNil] && [other.tail isNil])) return NO;
-  
   if (![tail compareTo:other.tail]) return NO;
-  
   return YES;
 }
 

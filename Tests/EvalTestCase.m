@@ -60,7 +60,7 @@
   STAssertTrue([result isMemberOfClass:[DslCons class]], nil);
   STAssertEqualObjects([result.head identifierValue], @"a", nil);
   STAssertEqualObjects([result.tail.head identifierValue], @"b", nil);
-  STAssertNil(result.tail.tail, nil);
+  STAssertEqualObjects(NIL_CONS, result.tail.tail, nil);
 }
 
 - (void) testShortQuote
@@ -69,14 +69,14 @@
   STAssertTrue([result isMemberOfClass:[DslCons class]], nil);
   STAssertEqualObjects([result.head identifierValue], @"a", nil);
   STAssertEqualObjects([result.tail.head identifierValue], @"b", nil);
-  STAssertNil(result.tail.tail, nil);
+  STAssertEqualObjects(NIL_CONS, result.tail.tail, nil);
 }
 
 
 - (void) testSequenceEvaluation
 {
-  DslExpression *result = [[p parseExpression:[InputStream withString:@"(1 2 3)"]] evalEach:nil];
-  STAssertNotNil(result, nil);
+  DslExpression *result = [DSL evalEach:(DslCons*)[p parseExpression:[InputStream withString:@"(1 2 3)"]]];
+  STAssertFalse(result == NIL_CONS, nil);
   STAssertTrue([result isMemberOfClass:[DslNumber class]], nil);
   STAssertEquals([result intValue], 3, nil);
 }
